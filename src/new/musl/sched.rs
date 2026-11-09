@@ -12,9 +12,15 @@ cfg_if! {
                 pub sched_priority: c_int,
 
                 __reserved1: Padding<c_int>,
-                #[cfg(musl32_time64)]
+                #[cfg(all(
+                    musl32_time64,
+                    not(all(target_arch = "aarch64", target_pointer_width = "32"))
+                ))]
                 __reserved2: Padding<[c_long; 4]>,
-                #[cfg(not(musl32_time64))]
+                #[cfg(any(
+                    not(musl32_time64),
+                    all(target_arch = "aarch64", target_pointer_width = "32")
+                ))]
                 __reserved2: Padding<[__c_anon_sched_param__reserved2; 2]>,
                 __reserved3: Padding<c_int>,
             }

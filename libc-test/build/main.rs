@@ -4039,11 +4039,14 @@ fn test_linux(t: &Target) {
     }
 
     // Some platforms only exist with recent musl. Keep in sync with libc's build.rs.
-    if musl && (loongarch64 || hexagon || pauthtest/* || ohos */ || time64) {
+    if musl && (loongarch64 || hexagon || pauthtest/* || ohos */ || time64 || (aarch64 && p32)) {
         musl_v1_2 = true;
     }
 
     let old_musl = musl && !musl_v1_2;
+    // The AArch64 ILP32 musl port is based on musl 1.2.5, whose headers predate some items
+    // that musl 1.2.6 has.
+    let musl_1_2_5 = musl && aarch64 && p32;
 
     let mut cfg = ctest_cfg();
 
@@ -4508,7 +4511,7 @@ fn test_linux(t: &Target) {
 
             // Recent additions
             "ptp_sys_offset_extended" if kernel < (6, 12) => true,
-            "epoll_params" if old_musl => true,
+            "epoll_params" if old_musl || musl_1_2_5 => true,
             "epoll_params" => kernel < (6, 9),
             "mnt_ns_info" => kernel < (6, 12),
 
@@ -4894,7 +4897,7 @@ fn test_linux(t: &Target) {
             | "PF_RANDOMIZE" | "PF_NO_SETAFFINITY" | "PF_MCE_EARLY" | "PF_MEMALLOC_PIN"
             | "PF_BLOCK_TS" | "PF_SUSPEND_TASK" => true,
 
-            "EPIOCSPARAMS" | "EPIOCGPARAMS" if old_musl => true,
+            "EPIOCSPARAMS" | "EPIOCGPARAMS" if old_musl || musl_1_2_5 => true,
             // Changed value
             "IPPROTO_MAX" if old_musl => true,
 
@@ -4918,7 +4921,7 @@ fn test_linux(t: &Target) {
             "SECURE_ALL_BITS" | "SECURE_ALL_LOCKS" => kernel < (6, 14),
 
             // Recent additions
-            "AT_HWCAP3" | "AT_HWCAP4" if old_musl => true,
+            "AT_HWCAP3" | "AT_HWCAP4" if old_musl || musl_1_2_5 => true,
             "AT_HWCAP3" | "AT_HWCAP4" => kernel < (6, 9),
             "BCACHEFS_SUPER_MAGIC" => kernel < (6, 10),
             "PR_MDWE_NO_INHERIT" => kernel < (6, 7),
@@ -5236,6 +5239,20 @@ fn test_linux(t: &Target) {
                 | "__statx_pad2"
                 | "__statx_pad3",
             ) if gnu && versions.glibc.unwrap() < (2, 43) => true,
+            (
+                "statx",
+                "stx_mnt_id"
+                | "stx_dio_mem_align"
+                | "stx_dio_offset_align"
+                | "stx_subvol"
+                | "stx_atomic_write_unit_min"
+                | "stx_atomic_write_unit_max"
+                | "stx_atomic_write_segments_max"
+                | "stx_dio_read_offset_align"
+                | "stx_atomic_write_unit_max_opt"
+                | "__statx_pad2"
+                | "__statx_pad3",
+            ) if musl_1_2_5 => true,
             _ => false,
         }
     });

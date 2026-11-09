@@ -830,7 +830,7 @@ pub use self::lfs64::*;
 cfg_if! {
     if #[cfg(any(
         target_arch = "x86_64",
-        target_arch = "aarch64",
+        all(target_arch = "aarch64", target_pointer_width = "64"),
         target_arch = "mips64",
         target_arch = "powerpc64",
         target_arch = "s390x",
@@ -847,7 +847,8 @@ cfg_if! {
         target_arch = "powerpc",
         target_arch = "hexagon",
         target_arch = "riscv32",
-        target_arch = "arm"
+        target_arch = "arm",
+        all(target_arch = "aarch64", target_pointer_width = "32")
     ))] {
         mod b32;
         pub use self::b32::*;

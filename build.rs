@@ -276,6 +276,7 @@ fn main() {
     let only_v1_2_on_musl = target_arch == "loongarch64"
         || target_arch == "hexagon"
         || target_arch == "riscv32"
+        || (target_arch == "aarch64" && target_ptr_width == "32")
         || target_env == "ohos"
         || target_abi == "pauthtest";
 
