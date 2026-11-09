@@ -4569,6 +4569,12 @@ fn test_linux(t: &Target) {
             return true;
         }
 
+        // AArch64 ILP32 glibc: SYS_futex is an alias of SYS_futex_time64 (as on musl); the C
+        // headers only define SYS_futex_time64.
+        if gnu && aarch64 && p32 && name == "SYS_futex" {
+            return true;
+        }
+
         if !gnu {
             // Skip definitions from the kernel on non-glibc Linux targets.
             // They're libc-independent, so we only need to check them on one

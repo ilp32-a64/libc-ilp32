@@ -797,6 +797,9 @@ pub const SYS_mq_timedreceive_time64: c_long = 419;
 pub const SYS_semtimedop_time64: c_long = 420;
 pub const SYS_rt_sigtimedwait_time64: c_long = 421;
 pub const SYS_futex_time64: c_long = 422;
+// The C headers only define SYS_futex_time64 on this 64-bit time_t ABI. SYS_futex is the same
+// call, as on musl, so that code using libc::SYS_futex with libc::timespec builds and works.
+pub const SYS_futex: c_long = SYS_futex_time64;
 pub const SYS_sched_rr_get_interval_time64: c_long = 423;
 pub const SYS_pidfd_send_signal: c_long = 424;
 pub const SYS_io_uring_setup: c_long = 425;
