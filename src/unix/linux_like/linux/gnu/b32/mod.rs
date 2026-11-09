@@ -15,7 +15,20 @@ pub type __syscall_ulong_t = c_ulong;
 pub type __suseconds64_t = i64;
 
 cfg_if! {
-    if #[cfg(target_arch = "riscv32")] {
+    if #[cfg(target_arch = "aarch64")] {
+        // AArch64 ILP32: the glibc ABI starts with 64-bit time_t and file offsets
+        pub type time_t = i64;
+        pub type suseconds_t = i64;
+        type __ino_t = c_ulong;
+        type __ino64_t = u64;
+        pub type ino_t = __ino64_t;
+        pub type off_t = i64;
+        pub type blkcnt_t = i64;
+        pub type fsblkcnt_t = u64;
+        pub type fsfilcnt_t = u64;
+        pub type rlim_t = u64;
+        pub type blksize_t = i32;
+    } else if #[cfg(target_arch = "riscv32")] {
         pub type time_t = i64;
         pub type suseconds_t = i64;
         type __ino_t = c_ulong;
@@ -68,6 +81,7 @@ cfg_if! {
 
 cfg_if! {
     if #[cfg(not(any(
+        target_arch = "aarch64",
         target_arch = "mips",
         target_arch = "mips32r6",
         target_arch = "powerpc",
@@ -125,6 +139,7 @@ cfg_if! {
 }
 
 s! {
+    #[cfg(not(target_arch = "aarch64"))]
     pub struct pthread_attr_t {
         __size: [u32; 9],
     }
@@ -157,6 +172,7 @@ s! {
         pub sem_otime: crate::time_t,
         #[cfg(not(any(
             gnu_time_bits64,
+            target_arch = "aarch64",
             target_arch = "mips",
             target_arch = "mips32r6",
             target_arch = "powerpc"
@@ -167,6 +183,7 @@ s! {
         pub sem_ctime: crate::time_t,
         #[cfg(not(any(
             gnu_time_bits64,
+            target_arch = "aarch64",
             target_arch = "mips",
             target_arch = "mips32r6",
             target_arch = "powerpc"
@@ -188,7 +205,7 @@ s! {
         __glibc_reserved4: Padding<crate::__syscall_ulong_t>,
     }
 
-    #[cfg(gnu_time_bits64)]
+    #[cfg(any(gnu_time_bits64, target_arch = "aarch64"))]
     pub struct timex {
         pub modes: c_uint,
         _pad1: Padding<c_int>,
@@ -226,7 +243,7 @@ s! {
         pub __unused11: i32,
     }
 
-    #[cfg(not(gnu_time_bits64))]
+    #[cfg(not(any(gnu_time_bits64, target_arch = "aarch64")))]
     pub struct timex {
         pub modes: c_uint,
         pub offset: c_long,
@@ -269,9 +286,16 @@ pub const F_OFD_GETLK: c_int = 36;
 pub const F_OFD_SETLK: c_int = 37;
 pub const F_OFD_SETLKW: c_int = 38;
 
+cfg_if! {
+    if #[cfg(target_arch = "aarch64")] {
+        pub const __SIZEOF_PTHREAD_MUTEX_T: usize = 32;
+        pub const __SIZEOF_PTHREAD_RWLOCK_T: usize = 48;
+    } else {
+        pub const __SIZEOF_PTHREAD_MUTEX_T: usize = 24;
+        pub const __SIZEOF_PTHREAD_RWLOCK_T: usize = 32;
+    }
+}
 pub const __SIZEOF_PTHREAD_CONDATTR_T: usize = 4;
-pub const __SIZEOF_PTHREAD_MUTEX_T: usize = 24;
-pub const __SIZEOF_PTHREAD_RWLOCK_T: usize = 32;
 pub const __SIZEOF_PTHREAD_BARRIER_T: usize = 20;
 pub const __SIZEOF_PTHREAD_MUTEXATTR_T: usize = 4;
 pub const __SIZEOF_PTHREAD_RWLOCKATTR_T: usize = 8;
@@ -361,7 +385,7 @@ cfg_if! {
     ))] {
         pub const F_SETLK: c_int = 34;
         pub const F_SETLKW: c_int = 35;
-    } else if #[cfg(gnu_file_offset_bits64)] {
+    } else if #[cfg(any(gnu_file_offset_bits64, target_arch = "aarch64"))] {
         pub const F_SETLK: c_int = 13;
         pub const F_SETLKW: c_int = 14;
     } else {
@@ -370,10 +394,14 @@ cfg_if! {
     }
 }
 
-pub const PTRACE_GETFPREGS: c_uint = 14;
-pub const PTRACE_SETFPREGS: c_uint = 15;
-pub const PTRACE_GETREGS: c_uint = 12;
-pub const PTRACE_SETREGS: c_uint = 13;
+cfg_if! {
+    if #[cfg(not(target_arch = "aarch64"))] {
+        pub const PTRACE_GETFPREGS: c_uint = 14;
+        pub const PTRACE_SETFPREGS: c_uint = 15;
+        pub const PTRACE_GETREGS: c_uint = 12;
+        pub const PTRACE_SETREGS: c_uint = 13;
+    }
+}
 
 extern "C" {
     pub fn sysctl(
@@ -405,6 +433,9 @@ cfg_if! {
     } else if #[cfg(target_arch = "sparc")] {
         mod sparc;
         pub use self::sparc::*;
+    } else if #[cfg(target_arch = "aarch64")] {
+        mod aarch64;
+        pub use self::aarch64::*;
     } else if #[cfg(target_arch = "riscv32")] {
         mod riscv32;
         pub use self::riscv32::*;

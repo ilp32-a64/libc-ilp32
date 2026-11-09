@@ -812,6 +812,7 @@ s! {
                 target_arch = "csky",
                 target_arch = "powerpc",
                 target_arch = "sparc",
+                target_arch = "aarch64",
                 target_arch = "x86_64",
                 target_arch = "x86",
             )
@@ -830,6 +831,7 @@ s! {
                 target_arch = "csky",
                 target_arch = "powerpc",
                 target_arch = "sparc",
+                target_arch = "aarch64",
                 target_arch = "x86_64",
                 target_arch = "x86",
             ))
@@ -852,6 +854,7 @@ s! {
                 target_arch = "csky",
                 target_arch = "powerpc",
                 target_arch = "sparc",
+                target_arch = "aarch64",
                 target_arch = "x86_64",
                 target_arch = "x86"
             )
@@ -869,6 +872,7 @@ s! {
                 target_arch = "m68k",
                 target_arch = "powerpc",
                 target_arch = "sparc",
+                target_arch = "aarch64",
                 target_arch = "x86_64",
                 target_arch = "x86"
             ))
@@ -891,6 +895,7 @@ s! {
                 target_arch = "csky",
                 target_arch = "powerpc",
                 target_arch = "sparc",
+                target_arch = "aarch64",
                 target_arch = "x86_64",
                 target_arch = "x86"
             )
@@ -909,6 +914,7 @@ s! {
                 target_arch = "csky",
                 target_arch = "powerpc",
                 target_arch = "sparc",
+                target_arch = "aarch64",
                 target_arch = "x86_64",
                 target_arch = "x86"
             ))

@@ -1743,8 +1743,22 @@ extern "C" {
         link_name = "cfgetispeed@GLIBC_2.0"
     )]
     #[cfg_attr(
-        all(target_os = "linux", target_env = "gnu", target_arch = "aarch64"),
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "64"
+        ),
         link_name = "cfgetispeed@GLIBC_2.17"
+    )]
+    #[cfg_attr(
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "32"
+        ),
+        link_name = "cfgetispeed@GLIBC_2.41"
     )]
     #[cfg_attr(
         all(target_os = "linux", target_env = "gnu", target_arch = "loongarch64"),
@@ -1845,8 +1859,22 @@ extern "C" {
         link_name = "cfgetospeed@GLIBC_2.0"
     )]
     #[cfg_attr(
-        all(target_os = "linux", target_env = "gnu", target_arch = "aarch64"),
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "64"
+        ),
         link_name = "cfgetospeed@GLIBC_2.17"
+    )]
+    #[cfg_attr(
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "32"
+        ),
+        link_name = "cfgetospeed@GLIBC_2.41"
     )]
     #[cfg_attr(
         all(target_os = "linux", target_env = "gnu", target_arch = "loongarch64"),
@@ -1947,8 +1975,22 @@ extern "C" {
         link_name = "cfsetispeed@GLIBC_2.0"
     )]
     #[cfg_attr(
-        all(target_os = "linux", target_env = "gnu", target_arch = "aarch64"),
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "64"
+        ),
         link_name = "cfsetispeed@GLIBC_2.17"
+    )]
+    #[cfg_attr(
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "32"
+        ),
+        link_name = "cfsetispeed@GLIBC_2.41"
     )]
     #[cfg_attr(
         all(target_os = "linux", target_env = "gnu", target_arch = "loongarch64"),
@@ -2049,8 +2091,22 @@ extern "C" {
         link_name = "cfsetospeed@GLIBC_2.0"
     )]
     #[cfg_attr(
-        all(target_os = "linux", target_env = "gnu", target_arch = "aarch64"),
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "64"
+        ),
         link_name = "cfsetospeed@GLIBC_2.17"
+    )]
+    #[cfg_attr(
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_arch = "aarch64",
+            target_pointer_width = "32"
+        ),
+        link_name = "cfsetospeed@GLIBC_2.41"
     )]
     #[cfg_attr(
         all(target_os = "linux", target_env = "gnu", target_arch = "loongarch64"),
@@ -2441,8 +2497,22 @@ cfg_if! {
                 link_name = "cfsetspeed@GLIBC_2.0"
             )]
             #[cfg_attr(
-                all(target_os = "linux", target_env = "gnu", target_arch = "aarch64"),
+                all(
+                    target_os = "linux",
+                    target_env = "gnu",
+                    target_arch = "aarch64",
+                    target_pointer_width = "64"
+                ),
                 link_name = "cfsetspeed@GLIBC_2.17"
+            )]
+            #[cfg_attr(
+                all(
+                    target_os = "linux",
+                    target_env = "gnu",
+                    target_arch = "aarch64",
+                    target_pointer_width = "32"
+                ),
+                link_name = "cfsetspeed@GLIBC_2.41"
             )]
             #[cfg_attr(
                 all(target_os = "linux", target_env = "gnu", target_arch = "loongarch64"),

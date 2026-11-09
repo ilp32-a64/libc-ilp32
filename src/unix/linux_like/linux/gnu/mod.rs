@@ -36,6 +36,7 @@ s! {
         #[cfg(all(
             not(gnu_file_offset_bits64),
             not(target_arch = "x86_64"),
+            not(target_arch = "aarch64"),
             target_pointer_width = "32"
         ))]
         __unused1: Padding<[c_char; 4]>,
@@ -343,8 +344,14 @@ s! {
     }
 
     // FIXME(1.0) this is actually a union
-    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
-    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
+    #[cfg_attr(
+        all(target_pointer_width = "32", not(target_arch = "aarch64")),
+        repr(align(4))
+    )]
+    #[cfg_attr(
+        any(target_pointer_width = "64", target_arch = "aarch64"),
+        repr(align(8))
+    )]
     pub struct sem_t {
         #[cfg(target_pointer_width = "32")]
         __size: [c_char; 16],
@@ -1242,13 +1249,14 @@ cfg_if! {
         target_arch = "mips32r6",
         target_arch = "powerpc",
         target_arch = "sparc",
-        target_arch = "riscv32"
+        target_arch = "riscv32",
+        all(target_arch = "aarch64", target_pointer_width = "32")
     ))] {
         mod b32;
         pub use self::b32::*;
     } else if #[cfg(any(
         target_arch = "x86_64",
-        target_arch = "aarch64",
+        all(target_arch = "aarch64", target_pointer_width = "64"),
         target_arch = "powerpc64",
         target_arch = "mips64",
         target_arch = "mips64r6",

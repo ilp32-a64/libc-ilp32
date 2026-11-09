@@ -14,12 +14,9 @@ s2! {
         pub f_favail: crate::fsfilcnt_t,
         pub f_fsid: c_ulong,
         // Mirrors `_STATVFSBUF_F_UNUSED` in the header. x32 is excluded because
-        // its `__SYSCALL_WORDSIZE` is 64, aarch64 because glibc always sets
-        // `__WORDSIZE` to 64.
-        #[cfg(all(
-            target_pointer_width = "32",
-            not(any(target_arch = "x86_64", target_arch = "aarch64"))
-        ))]
+        // its `__SYSCALL_WORDSIZE` is 64. AArch64 ILP32 (glibc 2.41+) has
+        // `__WORDSIZE` 32 and the padding.
+        #[cfg(all(target_pointer_width = "32", not(target_arch = "x86_64")))]
         __f_unused: Padding<c_int>,
         pub f_flag: c_ulong,
         pub f_namemax: c_ulong,
@@ -38,12 +35,9 @@ s2! {
         pub f_favail: u64,
         pub f_fsid: c_ulong,
         // Mirrors `_STATVFSBUF_F_UNUSED` in the header. x32 is excluded because
-        // its `__SYSCALL_WORDSIZE` is 64, aarch64 because glibc always sets
-        // `__WORDSIZE` to 64.
-        #[cfg(all(
-            target_pointer_width = "32",
-            not(any(target_arch = "x86_64", target_arch = "aarch64"))
-        ))]
+        // its `__SYSCALL_WORDSIZE` is 64. AArch64 ILP32 (glibc 2.41+) has
+        // `__WORDSIZE` 32 and the padding.
+        #[cfg(all(target_pointer_width = "32", not(target_arch = "x86_64")))]
         __f_unused: Padding<c_int>,
         pub f_flag: c_ulong,
         pub f_namemax: c_ulong,

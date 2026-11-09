@@ -16,17 +16,9 @@ pub type __syscall_ulong_t = c_ulonglong;
 #[cfg(not(all(target_arch = "x86_64", target_pointer_width = "32")))]
 pub type __syscall_ulong_t = c_ulong;
 
-cfg_if! {
-    if #[cfg(all(target_arch = "aarch64", target_pointer_width = "32"))] {
-        pub type clock_t = i32;
-        pub type time_t = i32;
-        pub type __fsword_t = i32;
-    } else {
-        pub type __fsword_t = i64;
-        pub type clock_t = i64;
-        pub type time_t = i64;
-    }
-}
+pub type __fsword_t = i64;
+pub type clock_t = i64;
+pub type time_t = i64;
 
 s! {
     pub struct sigset_t {

@@ -871,12 +871,5 @@ extern "C" {
     pub fn swapcontext(uocp: *mut ucontext_t, ucp: *const ucontext_t) -> c_int;
 }
 
-cfg_if! {
-    if #[cfg(target_pointer_width = "32")] {
-        mod ilp32;
-        pub use self::ilp32::*;
-    } else {
-        mod lp64;
-        pub use self::lp64::*;
-    }
-}
+mod lp64;
+pub use self::lp64::*;

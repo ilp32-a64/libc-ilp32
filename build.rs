@@ -329,6 +329,8 @@ fn main() {
     // 32-bit arches with 64-bit time_t by default. rv32 is 64-only, `x86_64` covers the x32 arch,
     // `!(linux|windows|hurd)` covers vxworks and future platforms.
     let gnu32_already_time64 = target_arch == "riscv32"
+        // aarch64 with 32-bit pointers is the ILP32 ABI, whose glibc has 64-bit time_t only
+        || target_arch == "aarch64"
         || target_arch == "x86_64"
         || !matches!(target_os.as_str(), "linux" | "windows" | "hurd");
     let gnu = target_env == "gnu";
@@ -357,6 +359,10 @@ fn main() {
 
     // `__USE_TIME_BITS64` is set on any platform if `time_t` is 64 bits.
     if target_os == "linux" && target_ptr_width == "64" {
+        cfgs.push(Cfg::LinuxTimeBits64);
+    }
+    // ... including AArch64 ILP32 glibc, which has 64-bit `time_t` only.
+    if target_os == "linux" && gnu && target_ptr_width == "32" && target_arch == "aarch64" {
         cfgs.push(Cfg::LinuxTimeBits64);
     }
 
