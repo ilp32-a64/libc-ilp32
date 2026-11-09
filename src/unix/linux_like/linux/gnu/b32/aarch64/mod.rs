@@ -202,6 +202,17 @@ s! {
         pub set_tid_size: c_ulonglong,
         pub cgroup: c_ulonglong,
     }
+
+    // net/iucv/iucv.h
+
+    pub struct sockaddr_iucv {
+        pub siucv_family: crate::sa_family_t,
+        __siucv_port: Padding<u16>, // unused crate::in_port_t
+        __siucv_addr: Padding<u32>, // unused crate::in_addr_t
+        pub siucv_nodeid: [c_char; 8],
+        pub siucv_user_id: [c_char; 8],
+        pub siucv_name: [c_char; 8],
+    }
 }
 
 s_no_extra_traits! {
