@@ -3931,7 +3931,9 @@ fn test_vxworks(t: &Target) {
 }
 
 fn config_gnu_bits(t: &Target, cfg: &mut ctest::TestGenerator) {
-    if t.gnu() && t.linux() && !t.x32() && !t.riscv32() && t.pointer_width == P32 {
+    if t.gnu() && t.linux() && !t.x32() && !t.riscv32() && !t.aarch64()
+        && t.pointer_width == P32
+    {
         let defaultbits = "32";
         let mut tb_env = env::var("CARGO_CFG_LIBC_UNSTABLE_GNU_TIME_BITS");
         let time64 = env_flag("CARGO_CFG_LIBC_UNSTABLE_TIME64");
@@ -4065,6 +4067,11 @@ fn test_linux(t: &Target) {
     }
 
     if p64 {
+        cfg.cfg("linux_time_bits64", None);
+    }
+
+    // AArch64 ILP32 glibc has 64-bit time_t only and defines __USE_TIME_BITS64.
+    if gnu && p32 && aarch64 {
         cfg.cfg("linux_time_bits64", None);
     }
 
