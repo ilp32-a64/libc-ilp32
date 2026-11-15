@@ -90,7 +90,14 @@ s2! {
         pub tv_nsec: i64,
         #[cfg(not(all(target_arch = "x86_64", target_pointer_width = "32")))]
         pub tv_nsec: c_long,
-        #[cfg(all(musl32_time64, target_endian = "little"))]
+        // AArch64 ILP32: no private field, so that `timespec { tv_sec, tv_nsec }` in other crates
+        // (rustix, pnet_sys) compiles; the tail padding is implicit (time_t is 8-byte aligned) and
+        // the kernel ignores the upper half of tv_nsec for ILP32 tasks, as with musl's own struct.
+        #[cfg(all(
+            musl32_time64,
+            target_endian = "little",
+            not(all(target_arch = "aarch64", target_pointer_width = "32"))
+        ))]
         __pad0: Padding<u32>,
     }
 
